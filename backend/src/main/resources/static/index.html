@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estación de calidad de agua</title>
+  <link rel="stylesheet" href="/css/panel.css">
+</head>
+<body>
+  <header class="barra">
+    <h1>Estación de calidad de agua</h1>
+    <p id="conexion" class="conexion" role="status">Esperando datos…</p>
+  </header>
+
+  <p id="aviso-sim" class="aviso" hidden>Datos simulados: no son mediciones reales.</p>
+
+  <main>
+    <section class="muestra" aria-live="polite">
+      <svg id="vaso" viewBox="0 0 200 260" role="img" aria-label="Vaso con la muestra de agua">
+        <defs>
+          <clipPath id="interior">
+            <path d="M42 30 L50 226 Q50 238 62 238 L138 238 Q150 238 150 226 L158 30 Z"/>
+          </clipPath>
+        </defs>
+        <g clip-path="url(#interior)">
+          <rect id="liquido" x="30" y="92" width="140" height="160" fill="#d5dde0"/>
+          <rect x="30" y="92" width="140" height="5" fill="#ffffff" opacity=".35"/>
+        </g>
+        <path d="M42 30 L50 226 Q50 238 62 238 L138 238 Q150 238 150 226 L158 30"
+              fill="none" stroke="#12303b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M32 30 H168" stroke="#12303b" stroke-width="5" stroke-linecap="round"/>
+        <g stroke="#12303b" stroke-width="2.5" stroke-linecap="round" opacity=".55">
+          <path d="M52 120 H70"/><path d="M53 160 H66"/><path d="M54 200 H70"/>
+        </g>
+      </svg>
+
+      <div class="lectura">
+        <p id="veredicto" class="veredicto">Sin lecturas</p>
+        <p id="estado" class="estado e-neutro">Conecte el nodo para comenzar</p>
+        <dl class="medidas">
+          <div><dt>Temperatura</dt><dd><span id="m-temp">–</span> <small>°C</small></dd></div>
+          <div><dt>Sólidos disueltos (TDS)</dt><dd><span id="m-tds">–</span> <small>ppm</small></dd></div>
+          <div><dt>Turbidez (señal del sensor)</dt><dd><span id="m-mv">–</span> <small>mV</small></dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="grafica">
+      <h2>Últimas 60 lecturas</h2>
+      <div class="lienzo"><canvas id="grafica" aria-label="Gráfica de TDS y turbidez"></canvas></div>
+    </section>
+
+    <section class="captura">
+      <h2>Captura de muestras para entrenar</h2>
+      <p class="ayuda">Elija qué agua tiene el sensor sumergido. Cada lectura se guardará con esa etiqueta.</p>
+      <div class="fila">
+        <label for="sel-captura">Muestra actual</label>
+        <select id="sel-captura">
+          <option value="NINGUNA">Ninguna (no capturar)</option>
+          <option value="LIMPIA">Agua limpia</option>
+          <option value="SALADA">Agua salada</option>
+          <option value="TURBIA">Agua turbia</option>
+          <option value="MUY_SUCIA">Agua muy sucia</option>
+        </select>
+      </div>
+      <ul id="conteos" class="conteos"></ul>
+      <div class="fila">
+        <button id="btn-entrenar" type="button">Entrenar con las muestras</button>
+        <a href="/api/datos.csv" download>Descargar muestras (CSV)</a>
+      </div>
+      <p id="msg-modelo" class="ayuda" role="status"></p>
+    </section>
+
+    <section class="eventos">
+      <h2>Alertas recientes</h2>
+      <ul id="lista-eventos" class="lista-eventos"><li class="vacio">Sin alertas en las últimas lecturas.</li></ul>
+    </section>
+  </main>
+
+  <script src="/js/vendor/chart.umd.js"></script>
+  <script src="/js/panel.js"></script>
+</body>
+</html>
